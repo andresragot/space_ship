@@ -128,7 +128,7 @@ function Draw() {
     camera.PostDraw(ctx);
 
     // crosshair
-    ctx.drawImage(graphicAssets.crosshair.image, Input.mouse.x - 32, Input.mouse.y - 32);
+    ctx.drawImage(assets.crosshair.img, Input.mouse.x - 32, Input.mouse.y - 32);
 
     // draw the fps
     DrawStats(ctx)
