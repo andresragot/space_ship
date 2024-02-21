@@ -191,4 +191,12 @@ class Vector2
         this.Random();
         this.Normalize();
     }
+
+    static Lerp(v1, v2, speed)
+    {
+        const v1Angle = Math.atan2(v2.y, v2.x);
+        const desiredDir = new Vector2(v2.x, v2.y).Sub(v1).Normalize();
+        const currentDir = new Vector2(v2.x, v2.y).Normalize();
+        currentDir += (desiredDir - currentDir) * speed;
+    }
 }

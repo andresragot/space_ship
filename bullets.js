@@ -14,16 +14,21 @@ class Bullet {
     Update(deltaTime) {
         this.position.x += Math.cos(this.rotation) * this.speed * deltaTime;
         this.position.y += Math.sin(this.rotation) * this.speed * deltaTime;
-
-        // deactivate the bullet if out of bounds
-        if (this.position.y < 0) {
-            this.onDeactivate(this);
-        }
     }
 
     Draw(ctx) {
+        ctx.save();
+
+        ctx.translate(this.position.x, this.position.y);
+        ctx.rotate(this.rotation + PIH);
+        //ctx.scale(0.2, 1);
+        
+        //ctx.drawImage(this.sprite, 180, 181, 32, 64, -16, -32, 32, 64)
+
         ctx.fillStyle = "yellow"
-        ctx.fillRect(this.position.x - 1, this.position.y - 8, 2, 8);
+        ctx.fillRect(-2, -20, 4, 20);
+
+        ctx.restore();
     }
 }
 
