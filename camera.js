@@ -41,6 +41,15 @@ class Camera {
         if (this.targetPosition.y > this.maxY)
             this.targetPosition.y = this.maxY;
 
+        this.shakingValue.Set(0,0);
+        if (this.shakingTime > 0)
+        {
+            this.shakingTime -= deltaTime;
+
+            this.shakingValue.x = Math.cos(this.shakeInitRandom.x + this.shakingTime * this.shakingSpeed) * this.shakingSize;
+            this.shakingValue.y = Math.sin(this.shakeInitRandom.y + this.shakingTime * this.shakingSpeed) * this.shakingSize;
+        }
+
         const smoothStep = this.smoothingSpeed * deltaTime;
 
         this.position.x += ((this.targetPosition.x - this.position.x) * smoothStep) + this.shakingValue.x;
@@ -57,4 +66,10 @@ class Camera {
         ctx.restore();
     }
 
+    Shake(time, speed, size){
+        this.shakingTime = time;
+        this.shakingSpeed = speed;
+        this.shakingSize = size;
+        this.shakeInitRandom.Random();
+    }
 }

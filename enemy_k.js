@@ -9,7 +9,6 @@ class Enemy_k extends Enemy
             Launch: 1,
         };
         this.actualState = this.stateMachine.View;
-        this.direction = { x:0, y:0};
 
         this.waitTime = 1;
     }

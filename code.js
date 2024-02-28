@@ -27,6 +27,7 @@ var assets = {
 var player = null;
 var enemies = [];
 var kamikaze = null;
+var asteroid = null;
 var camera = null;
 var grid = null;
 var sceneLimits = {
@@ -100,7 +101,10 @@ function Start() {
     let enemy = new Enemy(assets.ships.img, new Vector2 (100, 100), 1);
     enemies.push(enemy);
 
-    kamikaze = new Enemy_k(assets.ships.img, new Vector2(100, 100), 1);
+    //kamikaze = new Enemy_k(assets.ships.img, new Vector2(100, 100), 1);
+
+    asteroid = new Enemy_Asteroid(assets.ships.img, new Vector2(100 ,100), 2);
+    enemies.push(asteroid);
 
 }
 
@@ -145,17 +149,22 @@ function Update(deltaTime) {
     camera.Update(deltaTime);
 
     // update the kamikaze
-    kamikaze.Update(deltaTime);
+    //kamikaze.Update(deltaTime);
+    
+    // Update the asteroid
+    asteroid.Update(deltaTime);
 
     // player bullets vs enemies collisions
     for (let i = player.bullets.bullets.length - 1; i >= 0; i--) {
         const bullet = player.bullets.bullets[i];
         if (bullet.active) {
             for (let j = enemies.length - 1; j >= 0; j--) {
-                if (CheckCollisionCircle(bullet.position, enemies[j].position, enemies[j].boundingRadius2)) {
+                if (bullet.active && CheckCollisionCircle(bullet.position, enemies[j].position, enemies[j].boundingRadius2)) {
                     const enemyKilled = enemies[j].Damage(bullet.damage);
 
                     player.bullets.Deactivate(bullet);
+
+                    camera.Shake(0.2, 100, 5);
 
                     if (enemyKilled) {
                         enemies.splice(j, 1);
@@ -209,7 +218,10 @@ function Draw() {
     player.Draw(ctx);
 
     // draw the kamikaze
-    kamikaze.Draw(ctx);
+    //kamikaze.Draw(ctx);
+
+    // draw the asteroid
+    asteroid.Draw(ctx);
 
     camera.PostDraw(ctx);
 
