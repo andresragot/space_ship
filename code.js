@@ -44,6 +44,8 @@ var enemiesSpawnPoints = [
 ];
 var timeToSpawnEnemy = 3;
 var timeToSpawnEnemyAux = 3;
+var enemiesKilled = 0;
+var gameOver = false;
 
 function LoadImages(assets, onloaded) {
     let imagesToLoad = 0;
@@ -103,7 +105,7 @@ function Start() {
 
     //kamikaze = new Enemy_k(assets.ships.img, new Vector2(100, 100), 1);
 
-    asteroid = new Enemy_Asteroid(assets.ships.img, new Vector2(100 ,100), 2);
+    asteroid = new Enemy_Asteroid(assets.ships.img, new Vector2(100 ,100), 1);
     enemies.push(asteroid);
 
 }
@@ -139,6 +141,11 @@ function Loop() {
 }
 
 function Update(deltaTime) {
+
+
+    if (gameOver)
+        return;
+
     // update the enemies
     enemies.forEach(enemy => enemy.Update(deltaTime));
 
@@ -152,7 +159,7 @@ function Update(deltaTime) {
     //kamikaze.Update(deltaTime);
     
     // Update the asteroid
-    asteroid.Update(deltaTime);
+    //asteroid.Update(deltaTime);
 
     // player bullets vs enemies collisions
     for (let i = player.bullets.bullets.length - 1; i >= 0; i--) {
@@ -172,6 +179,28 @@ function Update(deltaTime) {
                 }
             }
         }
+    }
+
+    // check for enemies out of bound
+    for (let i = enemies.length - 1; i >= 0; i--)
+    {
+        const enemyPos = enemies[i].position;
+
+        const dist2 = Vector2.SqrMagnitude(enemyPos, player.position);
+
+        if (dist2 < enemies[i].boundingRadius2 + player.boundingRadius2)
+        {
+            gameOver = true;
+        }
+
+
+        if (enemyPos.x < sceneLimits.x - 100 ||
+            enemyPos.x > sceneLimits.x + sceneLimits.width + 100 ||
+            enemyPos.y < sceneLimits.y - 100 ||
+            enemyPos.y > sceneLimits.y + sceneLimits.height + 100) 
+            {
+                enemies.splice(i, 1);
+            }
     }
 
     // enemies spawning
@@ -221,12 +250,18 @@ function Draw() {
     //kamikaze.Draw(ctx);
 
     // draw the asteroid
-    asteroid.Draw(ctx);
+    //asteroid.Draw(ctx);
 
     camera.PostDraw(ctx);
 
     // crosshair
     ctx.drawImage(assets.crosshair.img, Input.mouse.x - 32, Input.mouse.y - 32);
+
+
+    if (gameOver)
+    {
+        DrawGameOverScreen();
+    }
 
     // draw the fps
     DrawStats(ctx)
@@ -243,6 +278,15 @@ function DrawStats(ctx) {
     ctx.fillText("FPS: " + fps, 6, 14);
     ctx.fillText("FPS (dt): " + (1 / globalDT).toFixed(2), 6, 32);
     ctx.fillText("deltaTime: " + (globalDT).toFixed(4), 6, 50);
+}
+
+function DrawGameOverScreen()
+{
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.font = "60px Comic Sans MS regular";
+
+    ctx.fillText("GAME OVER MAN!!!", canvas.width / 2, 220);
 }
 
 window.onload = Init;

@@ -121,6 +121,11 @@ class Vector2
         return new Vector2(0, 0);
     }
 
+    static Copy(vector)
+    {
+        return new Vector2(vector.x, vector.y);
+    }
+
     Set(x, y)
     {
         this.x = x;
@@ -129,9 +134,28 @@ class Vector2
 
     Length()
     {
+        return Math.sqrt(this.SqrLength());
+    }
+
+    SqrLength()
+    {
         const x2 = this.x * this.x;
         const y2 = this.y * this.y;
-        return Math.sqrt(x2 + y2);
+        return x2 + y2;
+    }
+
+    static Magnitude(v1, v2)
+    {
+        return Math.sqrt(this.SqrMagnitude(v1, v2));
+    }
+
+    static SqrMagnitude(v1, v2)
+    {
+        const difX = v2.x - v1.x;
+        const difY = v2.y - v1.y;
+        const x2 = difX * difX;
+        const y2 = difY * difY;
+        return x2 + y2;
     }
 
     Normalize()
